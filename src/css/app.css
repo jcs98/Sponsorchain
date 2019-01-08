@@ -1,0 +1,86 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.row {
+  margin-bottom: 0px;
+}
+
+.sign-in-page {
+  position: relative;
+}
+
+.background-img {
+  background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.5)), url(../images/home.jpg);
+  background-size: cover;
+  background-attachment: fixed;
+  height: -webkit-fill-available;
+}
+
+.center-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -80%);
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+h3 {
+  margin: 0.5rem 0 0.5rem 4rem;
+}
+
+h4 {
+  margin: 0.5rem 0 0.5rem 0;
+}
+
+.home-page {
+  display: none;
+}
+
+#content {
+  padding-top: 1.3rem;
+}
+
+#left-pane {
+  /* background-color: gray; */
+  /* height: -webkit-fill-available; */
+}
+
+.my-channel-header {
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+}
+
+.channel-details {
+  font-size: 2rem;
+  margin-right: 1.5rem;
+}
+
+.my-channel-details {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
+.my-views-details {
+  font-size: 1.2rem;
+}
+
+.cancel-btn {
+  margin-left: 0.5rem;
+}
+
+.video-col {
+  margin-bottom: 1.2rem;
+}
+
+.views {
+  font-size: 1.2rem;
+}

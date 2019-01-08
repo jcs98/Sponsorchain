@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sponsor</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Roboto:300" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+  <div id="sign-in-page" class="container-fluid">
+    <div class="background-img"></div>
+    <div class="center-container white-text center-align">
+      <h1>Sponsor</h1>
+      <h4>Create, Invest, Collaborate</h4>
+      <br>
+      <button class="btn red" id="authorize-button">Log In With Google</button>
+    </div>
+  </div>
+
+  <div id="home-page" class="container-fluid">
+    <nav class="black">
+      <div class="row">
+        <div class="nav-wrapper col l10 offset-l1">
+          <a href="#" class="brand-logo">Sponsor</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><button class="btn red" id="signout-button">Log Out</button></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="content" class="container-fluid">
+
+      <div class="row">
+
+        <div id="left-pane" class="col s12 m4 l4 offset-l1">
+          <div id="my-channel">
+            <div class="my-channel-header">
+              <h4 class="center-align">My Channel</h4>
+              <span>Title: <span class="channel-details">Lorem Ipsum</span></span>
+              <a target="_blank" href="https://youtube.com/${channel.snippet.customUrl}">(Visit Channel)</a>
+              <br>
+              <span>Subscribers: <span class="my-channel-details">2,178,503</span></span>
+              <span>Views: <span class="my-channel-details">421,184,884</span></span>
+              <span>Videos: <span class="my-channel-details">4,349</span></span>
+            </div>
+            <ul class="collection with-header">
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+              <li class="collection-item">
+                <div>
+                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
+                  <span>Views: <span class="my-views-details">421,184,884</span></span>
+                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                  <br><br>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="right-pane" class="col s12 m8 l6">
+          <div class="row">
+            <div class="row">
+              <div class="col s11 offset-l1">
+                <div class="col s12">
+                  <form id="channel-form">
+                    <div class="row">
+                      <h3>Discover</h3>
+                      <div class="input-field col s6 offset-l1">
+                        <input id="channel-input" type="text" class="validate">
+                        <label for="channel-input">Channel Name</label>
+                      </div>
+                      <div class="input-field col">
+                        <input type="submit" value="Search" class="btn grey darken-2">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="row">
+                  <div class="col s12 offset-l1">
+                    <div id="channel-data"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s11 offset-l1">
+              <div id="video-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script src="js/web3.min.js"></script>
+  <script src="js/truffle-contract.js"></script>
+  <script src="js/app.js"></script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+</body>
+
+</html>
