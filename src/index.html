@@ -25,7 +25,7 @@
   <div id="home-page" class="container-fluid">
     <nav class="black">
       <div class="row">
-        <div class="nav-wrapper col l10 offset-l1">
+        <div class="nav-wrapper navbar">
           <a href="#" class="brand-logo">Sponsor</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><button class="btn red" id="signout-button">Log Out</button></li>
@@ -38,7 +38,39 @@
 
       <div class="row">
 
-        <div id="left-pane" class="col s12 m4 l4 offset-l1">
+        <div id="left-pane" class="col s12 m4 l4">
+
+          <form id="registration-form">
+            <div class="row">
+              <div class="col s8 offset-s2">
+                <h4>Register New Creator</h4>
+                <div class="row my-channel-header">
+                  <div class="input-field col s12">
+                    <input id="channel-name-input" type="text" class="validate">
+                    <label for="channel-name-input">Channel Name</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="contact-input" type="email" class="validate">
+                    <label for="contact-input">Contact</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="fee-rate-input" type="number" min="0" class="validate">
+                    <label for="fee-rate-input">Fee Rate / View</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="max-views-input" type="number" min="0" class="validate">
+                    <label for="max-views-input">Max Views / Week</label>
+                  </div>
+                  <div class="input-field col right">
+                    <input type="submit" value="Register" class="btn grey darken-2">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+
           <div id="my-channel">
             <div class="my-channel-header">
               <h4 class="center-align">My Channel</h4>
@@ -108,34 +140,30 @@
           </div>
         </div>
 
-        <div id="right-pane" class="col s12 m8 l6">
+        <div id="right-pane" class="col s12 m8 l6 offset-l1">
           <div class="row">
-            <div class="row">
-              <div class="col s11 offset-l1">
-                <div class="col s12">
-                  <form id="channel-form">
-                    <div class="row">
-                      <h3>Discover</h3>
-                      <div class="input-field col s6 offset-l1">
-                        <input id="channel-input" type="text" class="validate">
-                        <label for="channel-input">Channel Name</label>
-                      </div>
-                      <div class="input-field col">
-                        <input type="submit" value="Search" class="btn grey darken-2">
-                      </div>
-                    </div>
-                  </form>
-                </div>
+            <div class="col s12 offset-l1">
+              <form id="channel-form">
                 <div class="row">
-                  <div class="col s12 offset-l1">
-                    <div id="channel-data"></div>
+                  <h3>Discover</h3>
+                  <div class="input-field col s6">
+                    <input id="channel-input" type="text" class="validate">
+                    <label for="channel-input">Channel Name</label>
+                  </div>
+                  <div class="input-field col">
+                    <input type="submit" value="Search" class="btn grey darken-2">
                   </div>
                 </div>
+              </form>
+            </div>
+            <div class="row">
+              <div class="col s12 offset-l1">
+                <div id="channel-data"></div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col s11 offset-l1">
+            <div class="col s12">
               <div id="video-container"></div>
             </div>
           </div>
@@ -149,7 +177,8 @@
   <script src="js/web3.min.js"></script>
   <script src="js/truffle-contract.js"></script>
   <script src="js/app.js"></script>
-  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
 </body>
 
 </html>

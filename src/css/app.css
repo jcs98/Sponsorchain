@@ -34,19 +34,23 @@ h1 {
 }
 
 h3 {
-  margin: 0.5rem 0 0.5rem 4rem;
+  margin: 0.5rem 0 0.5rem 0;
 }
 
 h4 {
   margin: 0.5rem 0 0.5rem 0;
 }
 
-.home-page {
+.home-page, #my-channel {
   display: none;
 }
 
+.navbar {
+  padding: 0 3rem;
+}
+
 #content {
-  padding-top: 1.3rem;
+  padding: 1rem 2rem 0 2rem;
 }
 
 #left-pane {
@@ -56,7 +60,7 @@ h4 {
 
 .my-channel-header {
   border: 1px solid #e0e0e0;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
 .channel-details {

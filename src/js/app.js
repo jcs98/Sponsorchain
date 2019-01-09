@@ -11,11 +11,29 @@ const homePage = document.getElementById('home-page');
 const authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
 const content = document.getElementById('content');
+const registrationForm = document.getElementById('registration-form');
 const channelForm = document.getElementById('channel-form');
 const channelInput = document.getElementById('channel-input');
 const videoContainer = document.getElementById('video-container');
 
 const defaultChannel = 'thenewboston';
+
+// Registration form submit
+registrationForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const channelName = document.getElementById('channel-name-input').value;
+  const contact = document.getElementById('contact-input').value;
+  const feeRate = document.getElementById('fee-rate-input').value;
+  const maxViews = document.getElementById('max-views-input').value;
+
+  if(channelName == "" || contact == "" || feeRate < 1 || maxViews < 1){
+    alert("Please enter all fields");
+    return;
+  }
+  console.log(channelName, contact, feeRate, maxViews);
+  // registerNewCreator(channelName, contact, feeRate, maxViews);
+  // getMyChannel();
+});
 
 // Form submit and change channel
 channelForm.addEventListener('submit', e => {
