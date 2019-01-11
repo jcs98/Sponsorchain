@@ -67,6 +67,10 @@ $(document).on('click', '#pay-btn', function (e) {
   console.log("hey", $('#email-message').val());
 });
 
+$(document).on('click', '#update-btn', function (e) {
+  console.log("update", $('#fee-rate-update-input').val(), $('#max-views-update-input').val());
+});
+
 
 // Load auth2 library
 function handleClientLoad() {

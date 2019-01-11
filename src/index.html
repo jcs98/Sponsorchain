@@ -76,6 +76,7 @@
               <h4 class="center-align">My Channel</h4>
               <span>Title: <span class="channel-details">Lorem Ipsum</span></span>
               <a target="_blank" href="https://youtube.com/${channel.snippet.customUrl}">(Visit Channel)</a>
+              <a class="modal-trigger grey darken-2 waves-effect waves-light btn-small right" href="#update-details-modal">Update</a>
               <br>
               <span>Subscribers: <span class="my-channel-details">2,178,503</span></span>
               <span>Views: <span class="my-channel-details">421,184,884</span></span>
@@ -140,7 +141,7 @@
           </div>
         </div>
 
-        <!-- Modal Structure -->
+        <!-- Modal Structures -->
         <div id="payment-modal" class="modal">
           <div class="modal-content">
             <h4>Payment Details</h4>
@@ -156,6 +157,29 @@
           <div class="modal-footer">
             <a href="#!" id="pay-btn" class="red waves-effect waves-light btn">Pay</a>
             <a href="#!" id="cancel-btn" class="modal-close grey darken-2 waves-effect waves-light btn">Cancel</a>
+          </div>
+        </div>
+
+        <div id="update-details-modal" class="modal" style="width:30%">
+          <div class="modal-content center-align">
+            <h4>Update Details</h4>
+            <form id="update-details-form">
+              <div class="row">
+                <h5>Channel Name: Lorem Ipsum</h5>
+                <div class="input-field col s10 offset-s1">
+                  <input id="fee-rate-update-input" type="number" value="1000" min="0" class="validate">
+                  <label for="fee-rate-update-input">Fee Rate / View</label>
+                </div>
+                <div class="input-field col s10 offset-s1">
+                  <input id="max-views-update-input" type="number" value="10000" min="0" class="validate">
+                  <label for="max-views-update-input">Max Views / Week</label>
+                </div>
+                <div class="input-field col s10 offset-s1">
+                  <a href="#!" class="cancel-btn modal-close grey darken-2 waves-effect waves-light btn right">Cancel</a>
+                  <input id="update-btn" type="submit" value="Update" class="btn red modal-close right">
+                </div>
+              </div>
+            </form>
           </div>
         </div>
 
