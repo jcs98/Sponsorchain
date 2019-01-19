@@ -148,9 +148,15 @@
             <div class="row">
               <div id="modal-left-content" class="col s6">
               </div>
-              <div class="input-field col s6">
-                <textarea id="email-message" class="materialize-textarea"></textarea>
-                <label for="email-message">Message (Add your promotion details and link here)</label>
+              <div class="col s6">
+                <div class="input-field">
+                  <input id="payment-amount-input" type="number" value="1000" min="0" class="validate">
+                  <label for="payment-amount-input">Amount</label>
+                </div>
+                <div class="input-field">
+                  <textarea id="email-message" class="materialize-textarea"></textarea>
+                  <label for="email-message">Message (Add your promotion details and link here)</label>
+                </div>
               </div>
             </div>
           </div>
@@ -207,7 +213,8 @@
           </div>
           <div class="row">
             <div class="col s12">
-              <br><h4 class="center-align">Latest Videos</h4>
+              <br>
+              <h4 class="center-align">Latest Videos</h4>
               <div id="video-container"></div>
             </div>
           </div>
