@@ -6,11 +6,13 @@ const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly';
 
 const signInPage = $('#sign-in-page')[0];
 const homePage = $('#home-page')[0];
-const defaultChannel = 'thenewboston';
+const registrationForm = $('#registration-form')[0];
+const myChannelPanel = $('#my-channel')[0];
 
 App = {
   web3Provider: null,
   contracts: {},
+  currentChannel: 'thenewboston',
 
   init: async function () {
     // Load data
@@ -43,13 +45,12 @@ App = {
   },
 
   initContract: function () {
-    // $.getJSON('Sponsor.json', function (data) {
-    //   var SponsorArftifact = data;
-    //   App.contracts.Sponsor = TruffleContract(SponsorArftifact);
-    //   App.contracts.Sponsor.setProvider(App.web3Provider);
-    //   return App.markAdopted();
-    // });
-
+    $.getJSON('Sponsor.json', function (data) {
+      const SponsorArftifact = data;
+      App.contracts.Sponsor = TruffleContract(SponsorArftifact);
+      App.contracts.Sponsor.setProvider(App.web3Provider);
+      return App.setMyChannelPanel();
+    });
     return App.bindEvents();
   },
 
@@ -95,14 +96,41 @@ App = {
     if (isSignedIn) {
       homePage.style.display = 'block';
       signInPage.style.display = 'none';
-      console.log(gapi.client);
-      App.getChannel(defaultChannel);
+      App.getChannel(App.currentChannel).then(response => {
+        const channel = response.result.items[0];
+        App.setRightPanelChannel(channel);
+      })
+        .catch(err => M.toast({ html: 'No channel by that name' }));
     } else {
       homePage.style.display = 'none';
       signInPage.style.display = 'block';
     }
   },
 
+  // Sets "My Channel" panel if creator is registered
+  setMyChannelPanel: function () {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getRegisteredChannelName({ from: account });
+      }).then(function (channelName) {
+        registrationForm.style.display = 'none';
+        myChannelPanel.style.display = 'block';
+        // return App.displayMyChannel()
+        return console.log("success", channelName);
+      }).catch(function (err) {
+        console.log(err.message);
+        registrationForm.style.display = 'block';
+        myChannelPanel.style.display = 'none';
+      });
+    });
+  },
 
   // Click handlers
   handleAuthClick: function () {
@@ -139,6 +167,25 @@ App = {
     console.log("update", $('#fee-rate-update-input').val(), $('#max-views-update-input').val());
   },
 
+  // register new creator
+  registerCreator: function (channelName, contact, feeRate, maxViews) {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.registerCreator(channelName, contact, feeRate, maxViews, { from: account });
+      }).then(function (result) {
+        return App.setMyChannelPanel();
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+    });
+  },
 
   // Form submit handlers
   handleRegistrationFormSubmit: function (e) {
@@ -152,15 +199,29 @@ App = {
       M.toast({ html: 'Please enter all fields!' })
       return;
     }
-    console.log(channelName, contact, feeRate, maxViews);
-    // registerNewCreator(channelName, contact, feeRate, maxViews);
-    // getMyChannel();
+
+    App.getChannel(channelName).then(response => {
+      if (response.result.items[0].snippet === undefined) {
+        throw "channel not found";
+      }
+      App.registerCreator(channelName, contact, feeRate, maxViews);
+    })
+      .catch(err => M.toast({ html: 'No channel by that name' }));
   },
 
   handleChannelFormSubmit: function (e) {
     e.preventDefault();
-    const channel = $('#channel-input').val();
-    App.getChannel(channel);
+    const channelInput = $('#channel-input').val();
+
+    App.getChannel(channelInput).then(response => {
+      const channel = response.result.items[0];
+      if (response.result.items[0].snippet === undefined) {
+        throw "channel not found";
+      }
+      App.currentChannel = channelInput;
+      App.setRightPanelChannel(channel);
+    })
+      .catch(err => M.toast({ html: 'No channel by that name' }));
   },
 
 
@@ -169,39 +230,36 @@ App = {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   },
 
+  setRightPanelChannel: function (channel) {
+    const output = `
+    <span>Title: <span class="channel-details">
+    ${channel.snippet.title}
+    </span></span>
+    <a target="_blank" href="https://youtube.com/${channel.snippet.customUrl}">(Visit Channel)</a>
+    <br>
+    <span>Subscribers: <span class="channel-details">
+    ${App.numberWithCommas(channel.statistics.subscriberCount)}
+    </span></span>
+    <span>Views: <span class="channel-details">
+    ${App.numberWithCommas(channel.statistics.viewCount)}
+    </span></span>
+    <span>Videos: <span class="channel-details">
+    ${App.numberWithCommas(channel.statistics.videoCount)}
+    </span></span>        
+`;
+    $('#channel-data').html(output);
+
+    const playlistId = channel.contentDetails.relatedPlaylists.uploads;
+    App.requestVideoPlaylist(playlistId);
+  },
+
   // Get channel from API
   getChannel: function (channel) {
-    gapi.client.youtube.channels
+    return gapi.client.youtube.channels
       .list({
         part: 'snippet,contentDetails,statistics',
         forUsername: channel
-      })
-      .then(response => {
-        console.log(response);
-        const channel = response.result.items[0];
-
-        const output = `
-          <span>Title: <span class="channel-details"> ${channel.snippet.title}</span></span>
-          <a target="_blank" href="https://youtube.com/${
-          channel.snippet.customUrl
-          }">(Visit Channel)</a>
-          <br>
-          <span>Subscribers: <span class="channel-details"> ${App.numberWithCommas(
-            channel.statistics.subscriberCount
-          )}</span></span>
-          <span>Views: <span class="channel-details"> ${App.numberWithCommas(
-            channel.statistics.viewCount
-          )}</span></span>
-          <span>Videos: <span class="channel-details"> ${App.numberWithCommas(
-            channel.statistics.videoCount
-          )}</span></span>        
-      `;
-        $('#channel-data').html(output);
-
-        const playlistId = channel.contentDetails.relatedPlaylists.uploads;
-        App.requestVideoPlaylist(playlistId);
-      })
-      .catch(err => M.toast({ html: 'No channel by that name' }));
+      });
   },
 
   // Get individual video data
@@ -219,9 +277,12 @@ App = {
       // console.log(viewsCount);
       const videoOutput = `
       <div class="col s4 video-col">
-      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <iframe width="100%" height="auto" src="https://www.youtube.com/embed/${videoId}"
+       frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       <span class="views">views: ${App.numberWithCommas(viewsCount)}</span>
-      <a id="${videoId}" title="${title}" class="sponsor-btn modal-trigger red waves-effect waves-light btn-small right" href="#payment-modal">Sponsor</a>
+      <a id="${videoId}" title="${title}" 
+      class="sponsor-btn modal-trigger red waves-effect waves-light btn-small right" 
+      href="#payment-modal">Sponsor</a>
       </div>
       `;
       $('#video-container')[0].innerHTML += videoOutput;
