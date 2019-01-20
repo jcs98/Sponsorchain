@@ -13,6 +13,7 @@ App = {
   web3Provider: null,
   contracts: {},
   currentChannel: 'thenewboston',
+  myChannel: '',
 
   init: async function () {
     // Load data
@@ -49,7 +50,6 @@ App = {
       const SponsorArftifact = data;
       App.contracts.Sponsor = TruffleContract(SponsorArftifact);
       App.contracts.Sponsor.setProvider(App.web3Provider);
-      return App.setMyChannelPanel();
     });
     return App.bindEvents();
   },
@@ -60,6 +60,8 @@ App = {
 
     $(document).on('click', '.sponsor-btn', App.handleSponsorBtnClick);
     $('#pay-btn').click(App.handlePayBtnClick);
+
+    $(document).on('click', '#update-details-btn', App.handleUpdateDetailsBtnClick);
     $('#update-btn').click(App.handleUpdateBtnClick);
 
     $('#registration-form').submit(App.handleRegistrationFormSubmit);
@@ -99,12 +101,93 @@ App = {
       App.getChannel(App.currentChannel).then(response => {
         const channel = response.result.items[0];
         App.setRightPanelChannel(channel);
+        App.setMyChannelPanel();
       })
         .catch(err => M.toast({ html: 'No channel by that name' }));
     } else {
       homePage.style.display = 'none';
       signInPage.style.display = 'block';
     }
+  },
+
+  displayMyVideos: function (playlistId) {
+    const requestOptions = {
+      playlistId: playlistId,
+      part: 'snippet,contentDetails',
+      maxResults: 6
+    };
+    const request = gapi.client.youtube.playlistItems.list(requestOptions);
+
+    request.then(response => {
+      console.log(response.result.items);
+      const playListItems = response.result.items;
+      if (playListItems) {
+        // Loop through videos and append output
+        playListItems.forEach(item => {
+          const videoId = item.snippet.resourceId.videoId;
+          const title = item.snippet.title;
+          const options = {
+            id: videoId,
+            part: 'statistics'
+          }
+
+          const req = gapi.client.youtube.videos.list(options);
+          let views;
+          req.execute(res => {
+            views = res.items[0].statistics.viewCount;
+            const videoOutput = `
+            <li class="collection-item">
+              <div>
+                <span>Title: <span class="my-channel-details">${title}</span></span><br>
+                <span>Views: <span class="my-views-details">${views}</span></span>
+                <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
+                <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
+                <br><br>
+              </div>
+            </li>
+            `;
+            $('#my-videos').append(videoOutput);
+          });
+
+        });
+      } else {
+        $('#my-videos').html('No Uploaded Videos');
+      }
+    });
+  },
+
+  displayMyChannel: function (channelName) {
+    App.getChannel(channelName).then(response => {
+      const channel = response.result.items[0];
+      const playlistId = channel.contentDetails.relatedPlaylists.uploads;
+
+      const output = `
+        <div class="my-channel-header">
+          <h4 class="center-align">My Channel</h4>
+          <span>Title: <span class="channel-details">${channel.snippet.title}</span></span>
+          <a target="_blank" href="https://youtube.com/${channel.snippet.customUrl}">(Visit Channel)</a>
+          <a id="update-details-btn" href="#update-details-modal"
+           class="modal-trigger grey darken-2 waves-effect waves-light btn-small right">
+            Update Details
+          </a>
+          <br>
+          <span>Subscribers: <span class="my-channel-details">
+          ${App.numberWithCommas(channel.statistics.subscriberCount)}
+          </span></span>
+          <span>Views: <span class="my-channel-details">
+          ${App.numberWithCommas(channel.statistics.viewCount)}
+          </span></span>
+          <span>Videos: <span class="my-channel-details">
+          ${App.numberWithCommas(channel.statistics.videoCount)}
+          </span>
+        </div>
+        <ul id="my-videos" class="collection"></ul>      
+        `;
+
+      $('#my-channel').html(output);
+      App.displayMyVideos(playlistId);
+    })
+      .catch(err => console.log(err));
   },
 
   // Sets "My Channel" panel if creator is registered
@@ -120,10 +203,10 @@ App = {
         sponsorInstance = instance;
         return sponsorInstance.getRegisteredChannelName({ from: account });
       }).then(function (channelName) {
+        App.myChannel = channelName;
         registrationForm.style.display = 'none';
         myChannelPanel.style.display = 'block';
-        // return App.displayMyChannel()
-        return console.log("success", channelName);
+        return App.displayMyChannel(channelName);
       }).catch(function (err) {
         console.log(err.message);
         registrationForm.style.display = 'block';
@@ -163,8 +246,57 @@ App = {
     console.log("hey", $('#email-message').val());
   },
 
+  handleUpdateDetailsBtnClick: function (e) {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getFeeRate(App.myChannel, { from: account });
+      }).then(function (feeRate) {
+        $('#fee-rate-update-input').val(web3.fromWei(feeRate, 'ether'));
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getMaxViewsPerWeek(App.myChannel, { from: account });
+      }).then(function (maxViews) {
+        $('#max-views-update-input').val(maxViews);
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+    });
+  },
+
   handleUpdateBtnClick: function (e) {
-    console.log("update", $('#fee-rate-update-input').val(), $('#max-views-update-input').val());
+    e.preventDefault();
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+
+        const feeRate = web3.toWei($('#fee-rate-update-input').val(), 'ether');
+        const maxViews = $('#max-views-update-input').val();
+
+        return sponsorInstance.updateDetails(feeRate, maxViews, { from: account });
+      }).then(function (res) {
+        M.toast({ html: 'Updated Successfully!' });
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+    });
   },
 
   // register new creator
@@ -178,7 +310,9 @@ App = {
 
       App.contracts.Sponsor.deployed().then(function (instance) {
         sponsorInstance = instance;
-        return sponsorInstance.registerCreator(channelName, contact, feeRate, maxViews, { from: account });
+        return sponsorInstance.registerCreator(
+          channelName, contact, web3.toWei(feeRate, 'ether'), maxViews, { from: account }
+        );
       }).then(function (result) {
         return App.setMyChannelPanel();
       }).catch(function (err) {

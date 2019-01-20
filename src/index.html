@@ -68,77 +68,8 @@
               </div>
             </div>
           </form>
-
-
-
-          <div id="my-channel">
-            <div class="my-channel-header">
-              <h4 class="center-align">My Channel</h4>
-              <span>Title: <span class="channel-details">Lorem Ipsum</span></span>
-              <a target="_blank" href="https://youtube.com/${channel.snippet.customUrl}">(Visit Channel)</a>
-              <a class="modal-trigger grey darken-2 waves-effect waves-light btn-small right" href="#update-details-modal">Update</a>
-              <br>
-              <span>Subscribers: <span class="my-channel-details">2,178,503</span></span>
-              <span>Views: <span class="my-channel-details">421,184,884</span></span>
-              <span>Videos: <span class="my-channel-details">4,349</span></span>
-            </div>
-            <ul class="collection with-header">
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-              <li class="collection-item">
-                <div>
-                  <span>Title: <span class="my-channel-details">React JS Crash Course</span></span><br>
-                  <span>Views: <span class="my-views-details">421,184,884</span></span>
-                  <a class="grey darken-2 waves-effect waves-light btn-small secondary-content cancel-btn">Cancel</a>
-                  <a class="red waves-effect waves-light btn-small secondary-content">Claim Payment</a>
-                  <br><br>
-                </div>
-              </li>
-            </ul>
-          </div>
+          
+          <div id="my-channel"></div>
         </div>
 
         <!-- Modal Structures -->
@@ -173,11 +104,11 @@
               <div class="row">
                 <h5>Channel Name: Lorem Ipsum</h5>
                 <div class="input-field col s10 offset-s1">
-                  <input id="fee-rate-update-input" type="number" value="1000" min="0" class="validate">
-                  <label for="fee-rate-update-input">Fee Rate / View</label>
+                  <input id="fee-rate-update-input" type="number" value="0.00001" step="any" min="0" class="validate">
+                  <label for="fee-rate-update-input">Fee Rate ( ETH / View )</label>
                 </div>
                 <div class="input-field col s10 offset-s1">
-                  <input id="max-views-update-input" type="number" value="10000" min="0" class="validate">
+                  <input id="max-views-update-input" type="number" value="10000" step="1" min="0" class="validate">
                   <label for="max-views-update-input">Max Views / Week</label>
                 </div>
                 <div class="input-field col s10 offset-s1">

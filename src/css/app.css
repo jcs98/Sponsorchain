@@ -41,13 +41,9 @@ h4 {
   margin: 0.5rem 0 0.5rem 0;
 }
 
-.home-page, #my-channel {
+#sign-in-page, #home-page, #my-channel, #registration-form {
   display: none;
 }
-
-/* .home-page, #registration-form {
-  display: none;
-} */
 
 .navbar {
   padding: 0 3rem;
@@ -55,11 +51,6 @@ h4 {
 
 #content {
   padding: 1rem 2rem 0 2rem;
-}
-
-#left-pane {
-  /* background-color: gray; */
-  /* height: -webkit-fill-available; */
 }
 
 .my-channel-header {
