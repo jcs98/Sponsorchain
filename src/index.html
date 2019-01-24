@@ -54,7 +54,7 @@
                     <label for="contact-input">Contact</label>
                   </div>
                   <div class="input-field col s6">
-                    <input id="fee-rate-input" type="number" min="0" class="validate">
+                    <input id="fee-rate-input" type="number" min="0" step="any" class="validate">
                     <label for="fee-rate-input">Fee Rate / View</label>
                   </div>
                   <div class="input-field col s6">
@@ -68,7 +68,7 @@
               </div>
             </div>
           </form>
-          
+
           <div id="my-channel"></div>
         </div>
 
@@ -80,20 +80,22 @@
               <div id="modal-left-content" class="col s6">
               </div>
               <div class="col s6">
-                <div class="input-field">
-                  <input id="payment-amount-input" type="number" value="1000" min="0" class="validate">
-                  <label for="payment-amount-input">Amount</label>
-                </div>
-                <div class="input-field">
-                  <textarea id="email-message" class="materialize-textarea"></textarea>
-                  <label for="email-message">Message (Add your promotion details and link here)</label>
-                </div>
+                <form id="payment-form">
+                  <div class="input-field">
+                    <input id="payment-amount-input" type="number" step="any" min="0" class="validate">
+                    <label for="payment-amount-input" id="payment-amount-input-label">Amount</label>
+                  </div>
+                  <div class="input-field">
+                    <textarea id="email-message" class="materialize-textarea"></textarea>
+                    <label for="email-message">Message (Add your promotion details and link here)</label>
+                  </div>
+                  <input id="pay-btn" type="submit" value="Pay" class="btn red right">
+                </form>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <a href="#!" id="pay-btn" class="red waves-effect waves-light btn">Pay</a>
-            <a href="#!" id="cancel-btn" class="modal-close grey darken-2 waves-effect waves-light btn">Cancel</a>
+            <a href="#!" id="cancel-btn" class="modal-close grey darken-2 waves-effect waves-light btn">Close</a>
           </div>
         </div>
 

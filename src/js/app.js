@@ -13,6 +13,9 @@ App = {
   web3Provider: null,
   contracts: {},
   currentChannel: 'thenewboston',
+  currentChannelFeeRate: 0,
+  currentChannelMaxViews: 0,
+  currentChannelCreatorContact: '',
   myChannel: '',
 
   init: async function () {
@@ -59,7 +62,7 @@ App = {
     $('#signout-button').click(App.handleSignoutClick);
 
     $(document).on('click', '.sponsor-btn', App.handleSponsorBtnClick);
-    $('#pay-btn').click(App.handlePayBtnClick);
+    $('#payment-form').submit(App.handlePaymentFormSubmit);
 
     $(document).on('click', '#update-details-btn', App.handleUpdateDetailsBtnClick);
     $('#update-btn').click(App.handleUpdateBtnClick);
@@ -227,23 +230,66 @@ App = {
   handleSponsorBtnClick: function (e) {
     const id = e.target.id;
     const title = e.target.title;
-    const views = e.target.parentElement.childNodes[3].innerHTML;
+    const views = e.target.parentElement.childNodes[3].innerHTML.replace("views: ", "");
     const iframe = e.target.parentElement.childNodes[1].outerHTML
-    console.log(id, title, views, iframe);
 
     const data = `
     <h5>${title}</h5>
-    <h4>${views}</h4>
+    <h6>ID: <span id="current-video-id">${id}</span></h6>
+    <h5>views: <span id="current-video-views">${views}</span></h5>
     <div style="width: 50%">${iframe}</div>
-    <h5>Rate: 10 wei / view</h5>
-    <h5>Max: 1000 views / week</h5>
+    <h5>Rate: <span id="creator-fee">${App.currentChannelFeeRate.toString()}</span> ETH / view</h5>
+    <h5>Max: <span id="creator-max-views">${App.currentChannelMaxViews.toString()}</span> views / week</h5>
   `;
 
     $('#modal-left-content').html(data);
+
+    $('#payment-amount-input').attr({
+      "min": App.currentChannelFeeRate, "max": App.currentChannelFeeRate * App.currentChannelMaxViews
+    });
+
+    $('#payment-amount-input-label').html(
+      "Amount ( from " + App.currentChannelFeeRate + " to " + App.currentChannelFeeRate * App.currentChannelMaxViews + " ETH )");
+
   },
 
-  handlePayBtnClick: function (e) {
-    console.log("hey", $('#email-message').val());
+  handlePaymentFormSubmit: function (e) {
+    e.preventDefault();
+    const videoId = $('#current-video-id').html();
+    const views = parseInt($('#current-video-views').html().replace(",", ""));
+    const amount = $('#payment-amount-input').val();
+    if (amount <= 0) {
+      M.toast({ html: 'Please enter an amount' });
+      return;
+    }
+    console.log(videoId, App.currentChannel, views, amount);
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.makeDeposit(videoId, App.currentChannel, views, {
+          from: account, value: web3.toWei(amount, 'ether')
+        });
+      }).then(function (result) {
+        M.toast({ html: 'Payment Deposited Successfully!' });
+        console.log(result);
+        const msg = $('#email-message').val()
+          + "\nBlockHash: " + result.receipt.blockHash
+          + "\nTransactionHash" + result.tx;
+        console.log(msg);
+        const mailToURL = 'mailto:' + App.currentChannelCreatorContact + '?subject=' + result.tx + '&body=' + msg;
+        window.open(mailToURL);
+        $('#payment-form')[0].reset();
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+    });
   },
 
   handleUpdateDetailsBtnClick: function (e) {
@@ -329,7 +375,7 @@ App = {
     const feeRate = $('#fee-rate-input').val();
     const maxViews = $('#max-views-input').val();
 
-    if (channelName == "" || contact == "" || feeRate < 1 || maxViews < 1) {
+    if (channelName == "" || contact == "" || feeRate <= 0 || maxViews < 1) {
       M.toast({ html: 'Please enter all fields!' })
       return;
     }
@@ -341,6 +387,44 @@ App = {
       App.registerCreator(channelName, contact, feeRate, maxViews);
     })
       .catch(err => M.toast({ html: 'No channel by that name' }));
+  },
+
+  setCurrentChannelDetails: function () {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      const account = accounts[0];
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getFeeRate(App.currentChannel, { from: account });
+      }).then(function (feeRate) {
+        App.currentChannelFeeRate = web3.fromWei(feeRate, 'ether');
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getMaxViewsPerWeek(App.currentChannel, { from: account });
+      }).then(function (maxViews) {
+        App.currentChannelMaxViews = maxViews;
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+      App.contracts.Sponsor.deployed().then(function (instance) {
+        sponsorInstance = instance;
+        return sponsorInstance.getContact(App.currentChannel, { from: account });
+      }).then(function (contact) {
+        App.currentChannelCreatorContact = contact;
+      }).catch(function (err) {
+        console.log(err.message);
+      });
+
+    });
   },
 
   handleChannelFormSubmit: function (e) {
@@ -385,6 +469,7 @@ App = {
 
     const playlistId = channel.contentDetails.relatedPlaylists.uploads;
     App.requestVideoPlaylist(playlistId);
+    App.setCurrentChannelDetails();
   },
 
   // Get channel from API
