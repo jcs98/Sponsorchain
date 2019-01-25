@@ -181,6 +181,7 @@ contract Sponsor {
         if((msg.sender == receiver)
             && ((currentViews - payments[videoId].viewsAtStartDate) >= payments[videoId].viewsPaidFor)){
             receiver.transfer(amount);
+            payments[videoId].pending = false;
         }        
         
         // sponsor can claim refund if 1 week has passed
@@ -193,8 +194,7 @@ contract Sponsor {
                 // receiver.transfer(amount-penalty);
                 receiver.transfer(amount);   
             }
+            payments[videoId].pending = false;
         }
-        
-        payments[videoId].pending = false;
     }
 }
